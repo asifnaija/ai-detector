@@ -5,7 +5,8 @@ export enum AppMode {
 
 export interface DetectionResult {
   score: number; // 0 to 100, where 100 is fully AI
-  label: string; // e.g., "Likely AI", "Mixed", "Human"
+  confidence: number; // 0 to 100, indicating confidence in the prediction
+  label: string; // e.g., "Very Likely AI", "Likely Human"
   analysis: string;
   highlightedSentences?: string[]; // Optional: sentences that seem very robotic
 }

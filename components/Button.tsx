@@ -15,22 +15,27 @@ export const Button: React.FC<ButtonProps> = ({
   ...props 
 }) => {
   
-  const baseStyles = "inline-flex items-center justify-center px-6 py-3 border text-sm font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all duration-200";
+  const baseStyles = "inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-full transition-all duration-300 active:scale-[0.98]";
   
   const variants = {
-    primary: "border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500",
-    secondary: "border-gray-600 text-gray-200 bg-gray-800 hover:bg-gray-700 focus:ring-gray-500",
-    accent: "border-transparent text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500",
+    // Apple Blue or classic Black for primary actions
+    primary: "text-white bg-[#0071e3] hover:bg-[#0077ed] shadow-sm hover:shadow-md disabled:bg-blue-300", 
+    // Soft gray for secondary
+    secondary: "text-[#1d1d1f] bg-[#e8e8ed] hover:bg-[#dcdcde]",
+    // A specific style for the 'Humanize' action if we want it distinct, otherwise map to primary
+    accent: "text-white bg-[#1d1d1f] hover:bg-[#2c2c2e] shadow-sm hover:shadow-md disabled:bg-gray-400",
   };
 
   return (
     <button
       disabled={isLoading || disabled}
-      className={`${baseStyles} ${variants[variant]} ${isLoading || disabled ? 'opacity-60 cursor-not-allowed' : ''} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${isLoading || disabled ? 'cursor-not-allowed' : ''} ${className}`}
       {...props}
     >
-      {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-      {children}
+      {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin absolute" />}
+      <span className={`transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+        {children}
+      </span>
     </button>
   );
 };

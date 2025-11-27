@@ -3,8 +3,8 @@ import { Header } from './components/Header';
 import { Button } from './components/Button';
 import { ResultCard } from './components/ResultCard';
 import { detectAIContent, humanizeContent } from './services/geminiService';
-import { AppMode, AppState, DetectionResult, HumanizeResult } from './types';
-import { ScanSearch, Wand2, Trash2 } from 'lucide-react';
+import { AppMode, AppState } from './types';
+import { Trash2 } from 'lucide-react';
 
 const App: React.FC = () => {
   const [state, setState] = useState<AppState>({
@@ -21,7 +21,6 @@ const App: React.FC = () => {
       ...prev,
       mode: newMode,
       error: null,
-      // Optional: Clear results when switching or keep them? Let's keep input, clear result.
       detectionResult: null,
       humanizeResult: null,
     }));
@@ -62,7 +61,7 @@ const App: React.FC = () => {
       setState(prev => ({
         ...prev,
         isLoading: false,
-        error: "An error occurred while processing your request. Please try again.",
+        error: "An error occurred. Please check your internet connection and try again.",
       }));
     }
   };
@@ -70,53 +69,51 @@ const App: React.FC = () => {
   const wordCount = state.inputText.trim().split(/\s+/).filter(w => w.length > 0).length;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 flex flex-col">
+    <div className="min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
       <Header />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-6 py-10">
         
-        {/* Mode Selector */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-slate-900 p-1 rounded-xl border border-slate-800 inline-flex shadow-lg">
+        {/* iOS-style Segmented Control */}
+        <div className="flex justify-center mb-10">
+          <div className="bg-[#e3e3e8] p-1 rounded-full inline-flex relative shadow-inner">
             <button
               onClick={() => handleModeChange(AppMode.DETECT)}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              className={`relative z-10 px-8 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 state.mode === AppMode.DETECT
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <ScanSearch className="w-4 h-4" />
-              AI Detector
+              Detector
             </button>
             <button
               onClick={() => handleModeChange(AppMode.HUMANIZE)}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              className={`relative z-10 px-8 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 state.mode === AppMode.HUMANIZE
-                  ? 'bg-emerald-600 text-white shadow-md'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              <Wand2 className="w-4 h-4" />
               Humanizer
             </button>
           </div>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-220px)] min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[600px]">
           
           {/* Left: Input Area */}
-          <div className="flex flex-col gap-4">
-            <div className="flex-1 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col shadow-xl overflow-hidden">
-              <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Input Text</span>
-                <div className="flex items-center gap-4">
-                  <span className="text-xs text-slate-500">{wordCount} words</span>
+          <div className="flex flex-col gap-5 h-full">
+            <div className="flex-1 bg-white rounded-3xl border border-gray-200/60 flex flex-col shadow-[0_2px_20px_rgb(0,0,0,0.02)] overflow-hidden focus-within:ring-2 focus-within:ring-[#0071e3]/20 transition-all">
+              <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#fafafc]">
+                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Source Text</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-medium text-gray-400">{wordCount} words</span>
                   {state.inputText && (
                     <button 
                       onClick={handleClear}
-                      className="text-slate-500 hover:text-red-400 transition-colors"
+                      className="text-gray-400 hover:text-red-500 transition-colors"
                       title="Clear text"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -125,10 +122,10 @@ const App: React.FC = () => {
                 </div>
               </div>
               <textarea
-                className="flex-1 bg-transparent p-6 resize-none focus:outline-none text-slate-200 placeholder-slate-600 leading-relaxed font-light text-base"
+                className="flex-1 bg-transparent p-6 resize-none focus:outline-none text-[#1d1d1f] placeholder-gray-300 leading-relaxed text-[16px]"
                 placeholder={state.mode === AppMode.DETECT 
-                  ? "Paste text here to analyze if it's AI generated..." 
-                  : "Paste text here that sounds robotic or stiff to humanize it..."}
+                  ? "Enter text to check for AI generation..." 
+                  : "Enter text to rewrite naturally..."}
                 value={state.inputText}
                 onChange={(e) => setState(prev => ({ ...prev, inputText: e.target.value }))}
                 spellCheck={false}
@@ -140,13 +137,13 @@ const App: React.FC = () => {
               isLoading={state.isLoading}
               disabled={!state.inputText.trim()}
               variant={state.mode === AppMode.DETECT ? 'primary' : 'accent'}
-              className="w-full shadow-lg shadow-indigo-500/10"
+              className="w-full h-14 text-[15px] font-semibold tracking-wide shadow-lg shadow-blue-900/5 hover:shadow-blue-900/10 transform transition-all active:scale-[0.99]"
             >
-              {state.mode === AppMode.DETECT ? 'Analyze Text' : 'Humanize Text'}
+              {state.mode === AppMode.DETECT ? 'Analyze Content' : 'Humanize Text'}
             </Button>
             
             {state.error && (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg text-sm text-center">
+              <div className="bg-red-50 border border-red-100 text-red-600 p-4 rounded-2xl text-sm text-center font-medium">
                 {state.error}
               </div>
             )}
@@ -156,8 +153,10 @@ const App: React.FC = () => {
           <div className="h-full">
             <ResultCard 
               mode={state.mode}
+              inputText={state.inputText}
               detectionResult={state.detectionResult}
               humanizeResult={state.humanizeResult}
+              isLoading={state.isLoading}
             />
           </div>
 
