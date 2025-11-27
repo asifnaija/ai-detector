@@ -7,9 +7,10 @@ interface ResultCardProps {
   mode: AppMode;
   detectionResult: DetectionResult | null;
   humanizeResult: HumanizeResult | null;
+  onRegenerate?: () => void;
 }
 
-export const ResultCard: React.FC<ResultCardProps> = ({ mode, detectionResult, humanizeResult }) => {
+export const ResultCard: React.FC<ResultCardProps> = ({ mode, detectionResult, humanizeResult, onRegenerate }) => {
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = (text: string) => {
@@ -35,11 +36,20 @@ export const ResultCard: React.FC<ResultCardProps> = ({ mode, detectionResult, h
 
     return (
       <div className="h-full bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden flex flex-col">
-        <div className="p-6 border-b border-slate-700 bg-slate-800/50">
+        <div className="p-6 border-b border-slate-700 bg-slate-800/50 flex justify-between items-center">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             <Fingerprint className="w-5 h-5 text-indigo-400" />
             Analysis Result
           </h2>
+          {onRegenerate && (
+            <button
+              onClick={onRegenerate}
+              className="text-slate-400 hover:text-indigo-400 transition-colors p-2 rounded-lg hover:bg-slate-700"
+              title="Regenerate result"
+            >
+              <AlertTriangle className="w-5 h-5" />
+            </button>
+          )}
         </div>
         
         <div className="p-6 flex-1 overflow-y-auto">
@@ -98,13 +108,24 @@ export const ResultCard: React.FC<ResultCardProps> = ({ mode, detectionResult, h
             <AlertTriangle className="w-5 h-5 text-emerald-400" />
             Humanized Content
           </h2>
-          <button
-            onClick={() => handleCopy(humanizeResult.humanizedText)}
-            className="text-slate-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-slate-700"
-            title="Copy to clipboard"
-          >
-            {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
-          </button>
+          <div className="flex gap-2">
+            {onRegenerate && (
+              <button
+                onClick={onRegenerate}
+                className="text-slate-400 hover:text-emerald-400 transition-colors p-2 rounded-lg hover:bg-slate-700"
+                title="Regenerate result"
+              >
+                <AlertTriangle className="w-5 h-5" />
+              </button>
+            )}
+            <button
+              onClick={() => handleCopy(humanizeResult.humanizedText)}
+              className="text-slate-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-slate-700"
+              title="Copy to clipboard"
+            >
+              {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
         
         <div className="flex-1 overflow-y-auto p-6 space-y-6">

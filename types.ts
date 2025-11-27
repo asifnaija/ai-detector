@@ -16,6 +16,21 @@ export interface HumanizeResult {
   changesSummary: string;
 }
 
+export interface AppSettings {
+  model: string;
+  temperature: number;
+  maxTokens: number;
+  enableHistory: boolean;
+}
+
+export interface HistoryItem {
+  id: number;
+  mode: AppMode;
+  input: string;
+  result: DetectionResult | HumanizeResult;
+  timestamp: string;
+}
+
 export interface AppState {
   inputText: string;
   isLoading: boolean;
@@ -23,4 +38,6 @@ export interface AppState {
   detectionResult: DetectionResult | null;
   humanizeResult: HumanizeResult | null;
   error: string | null;
+  history: HistoryItem[];
+  settings: AppSettings;
 }
