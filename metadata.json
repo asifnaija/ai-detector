@@ -1,0 +1,5 @@
+{
+  "name": "Veritas AI - Detector & Humanizer",
+  "description": "A powerful tool to analyze text for AI-generated patterns and rewrite content to sound more natural and human-like using advanced Gemini models.",
+  "requestFramePermissions": []
+}
