@@ -7,6 +7,7 @@ export interface DetectionResult {
   score: number; // 0 to 100, where 100 is fully AI
   confidence: number; // 0 to 100, indicating confidence in the prediction
   label: string; // e.g., "Very Likely AI", "Likely Human"
+  detectedModel?: string; // e.g., "GPT-4", "Claude", "Gemini", "Unknown"
   analysis: string;
   highlightedSentences?: string[]; // Optional: sentences that seem very robotic
 }

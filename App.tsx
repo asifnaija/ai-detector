@@ -69,30 +69,32 @@ const App: React.FC = () => {
   const wordCount = state.inputText.trim().split(/\s+/).filter(w => w.length > 0).length;
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen flex flex-col selection:bg-violet-500/30 selection:text-violet-200 font-sans bg-[#050507]">
       <Header />
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-6 py-10">
-        
-        {/* iOS-style Segmented Control */}
-        <div className="flex justify-center mb-10">
-          <div className="bg-[#e3e3e8] p-1 rounded-full inline-flex relative shadow-inner">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-6 py-10 relative">
+        {/* Ambient Glow Background */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-violet-600/10 blur-[120px] rounded-full pointer-events-none" />
+
+        {/* Cosmic Segmented Control */}
+        <div className="flex justify-center mb-10 relative z-10">
+          <div className="bg-[#121215] p-1.5 rounded-full inline-flex relative shadow-lg border border-white/5">
             <button
               onClick={() => handleModeChange(AppMode.DETECT)}
-              className={`relative z-10 px-8 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`relative z-10 px-8 py-2.5 rounded-full text-sm font-bold tracking-wide transition-all duration-300 font-sans ${
                 state.mode === AppMode.DETECT
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-[#1c1c21] text-white shadow-[0_0_15px_-5px_rgba(255,255,255,0.1)] border border-white/10'
+                  : 'text-zinc-500 hover:text-zinc-300'
               }`}
             >
               Detector
             </button>
             <button
               onClick={() => handleModeChange(AppMode.HUMANIZE)}
-              className={`relative z-10 px-8 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+              className={`relative z-10 px-8 py-2.5 rounded-full text-sm font-bold tracking-wide transition-all duration-300 font-sans ${
                 state.mode === AppMode.HUMANIZE
-                  ? 'bg-white text-black shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-[#1c1c21] text-white shadow-[0_0_15px_-5px_rgba(255,255,255,0.1)] border border-white/10'
+                  : 'text-zinc-500 hover:text-zinc-300'
               }`}
             >
               Humanizer
@@ -101,19 +103,19 @@ const App: React.FC = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[600px] relative z-10">
           
           {/* Left: Input Area */}
           <div className="flex flex-col gap-5 h-full">
-            <div className="flex-1 bg-white rounded-3xl border border-gray-200/60 flex flex-col shadow-[0_2px_20px_rgb(0,0,0,0.02)] overflow-hidden focus-within:ring-2 focus-within:ring-[#0071e3]/20 transition-all">
-              <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-[#fafafc]">
-                <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Source Text</span>
+            <div className="flex-1 glass-panel rounded-2xl flex flex-col overflow-hidden focus-within:ring-1 focus-within:ring-violet-500/30 transition-all">
+              <div className="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
+                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider font-mono">Source Text</span>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-medium text-gray-400">{wordCount} words</span>
+                  <span className="text-xs font-medium text-zinc-500 font-mono">{wordCount} words</span>
                   {state.inputText && (
                     <button 
                       onClick={handleClear}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
+                      className="text-zinc-500 hover:text-rose-400 transition-colors"
                       title="Clear text"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -122,7 +124,7 @@ const App: React.FC = () => {
                 </div>
               </div>
               <textarea
-                className="flex-1 bg-transparent p-6 resize-none focus:outline-none text-[#1d1d1f] placeholder-gray-300 leading-relaxed text-[16px]"
+                className="flex-1 bg-transparent p-6 resize-none focus:outline-none text-zinc-200 placeholder-zinc-700 leading-relaxed text-[16px] font-serif"
                 placeholder={state.mode === AppMode.DETECT 
                   ? "Enter text to check for AI generation..." 
                   : "Enter text to rewrite naturally..."}
@@ -136,14 +138,14 @@ const App: React.FC = () => {
               onClick={handleProcess} 
               isLoading={state.isLoading}
               disabled={!state.inputText.trim()}
-              variant={state.mode === AppMode.DETECT ? 'primary' : 'accent'}
-              className="w-full h-14 text-[15px] font-semibold tracking-wide shadow-lg shadow-blue-900/5 hover:shadow-blue-900/10 transform transition-all active:scale-[0.99]"
+              variant="primary"
+              className="w-full h-14 text-[15px] font-bold tracking-wide transform transition-all active:scale-[0.99] rounded-2xl"
             >
               {state.mode === AppMode.DETECT ? 'Analyze Content' : 'Humanize Text'}
             </Button>
             
             {state.error && (
-              <div className="bg-red-50 border border-red-100 text-red-600 p-4 rounded-2xl text-sm text-center font-medium">
+              <div className="bg-rose-950/20 border border-rose-500/20 text-rose-400 p-4 rounded-2xl text-sm text-center font-medium">
                 {state.error}
               </div>
             )}

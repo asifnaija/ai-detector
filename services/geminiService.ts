@@ -24,6 +24,9 @@ export const detectAIContent = async (text: string): Promise<DetectionResult> =>
       Extract exact sentences from the text that appear most artificial or AI-generated. Return them as a list of strings.
       If no specific sentences stand out (e.g. text is human), return an empty list.
 
+      Additionally, if the text is likely AI-generated, try to identify the specific model family based on stylistic quirks (e.g., "GPT-4", "GPT-3.5", "Claude 3", "Gemini", "Llama", "Other"). 
+      If it is human or the specific model is indistinguishable, return "N/A" or "Unknown".
+
       Text to analyze:
       "${text}"
     `;
@@ -47,6 +50,10 @@ export const detectAIContent = async (text: string): Promise<DetectionResult> =>
             label: {
               type: Type.STRING,
               description: "The classification label (e.g., 'Very Likely AI', 'Likely Human').",
+            },
+            detectedModel: {
+              type: Type.STRING,
+              description: "The predicted AI model source (e.g., 'GPT-4', 'Claude', 'N/A').",
             },
             analysis: {
               type: Type.STRING,
